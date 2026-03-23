@@ -1,0 +1,478 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #0f0c29;
+}
+
+/* ── Layout ── */
+.game-root {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  font-family: 'Nunito', sans-serif;
+  color: #fff;
+  padding: 0 1rem 3rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.game-root::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(255,200,0,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(238,66,66,0.07) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Stars ── */
+.stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: twinkle var(--dur) var(--delay) infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.5); }
+}
+
+/* ── Header ── */
+.header {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2.5rem 1rem 1rem;
+}
+
+.game-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(1.1rem, 4vw, 2rem);
+  color: #FFD700;
+  text-shadow:
+    3px 3px 0 #c8860a,
+    0 0 30px rgba(255,215,0,0.5),
+    0 0 60px rgba(255,215,0,0.2);
+  letter-spacing: 2px;
+  line-height: 1.4;
+}
+
+.game-subtitle {
+  margin-top: 0.5rem;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* ── Score Panel ── */
+.score-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1.5rem auto;
+  max-width: 320px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.score-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.9rem 1.5rem;
+}
+
+.score-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.15);
+}
+
+.score-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 0.25rem;
+}
+
+.score-value {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.4rem;
+}
+
+.current-score {
+  color: #7fff7f;
+  text-shadow: 0 0 15px rgba(127,255,127,0.5);
+}
+
+.best-score {
+  color: #FFD700;
+  text-shadow: 0 0 15px rgba(255,215,0,0.5);
+}
+
+/* ── Progress Bar ── */
+.progress-bar-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+  margin: 0 auto 1.5rem;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #7fff7f, #FFD700);
+  border-radius: 100px;
+  transition: width 0.4s ease;
+}
+
+/* ── Instruction ── */
+.instruction {
+  text-align: center;
+  color: rgba(255,255,255,0.4);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Card Grid ── */
+.card-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 500px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+}
+
+/* ── Card ── */
+.card {
+  perspective: 800px;
+  cursor: pointer;
+  height: 200px;
+  animation: dealIn 0.4s var(--delay, 0s) both cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes dealIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.8); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover .card-inner {
+  transform: translateY(-6px) rotateY(5deg);
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card-front {
+  background: linear-gradient(145deg, #1e1b4b, #312e81);
+  border: 1px solid rgba(255,255,255,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  overflow: hidden;
+}
+
+.card-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.05) 0%,
+    transparent 50%,
+    rgba(255,255,255,0.02) 100%
+  );
+  pointer-events: none;
+}
+
+.card:hover .card-front {
+  border-color: rgba(255,215,0,0.4);
+  box-shadow:
+    0 16px 48px rgba(0,0,0,0.5),
+    0 0 20px rgba(255,215,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.card-back {
+  background: linear-gradient(145deg, #cc0000, #990000);
+  border: 1px solid rgba(255,255,255,0.15);
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Pokémon info ── */
+.pokemon-number {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.45rem;
+  color: rgba(255,255,255,0.3);
+  align-self: flex-start;
+  margin-bottom: 0.25rem;
+}
+
+.pokemon-img {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  transition: transform 0.3s ease;
+}
+
+.card:hover .pokemon-img {
+  transform: scale(1.08) translateY(-2px);
+}
+
+.pokemon-name {
+  font-weight: 800;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.pokemon-type {
+  display: flex;
+  gap: 4px;
+  margin-top: 0.3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.type-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.15);
+}
+
+.type-fire     { background: rgba(240,128,48,0.4);  color: #ffa060; }
+.type-water    { background: rgba(104,144,240,0.4); color: #88aaff; }
+.type-grass    { background: rgba(120,200,80,0.4);  color: #88e060; }
+.type-electric { background: rgba(248,208,48,0.4);  color: #ffe060; }
+.type-psychic  { background: rgba(248,88,136,0.4);  color: #ff88bb; }
+.type-normal   { background: rgba(168,168,120,0.4); color: #ccc; }
+.type-poison   { background: rgba(160,64,160,0.4);  color: #dd88ff; }
+.type-ghost    { background: rgba(112,88,152,0.4);  color: #bb88ff; }
+.type-dragon   { background: rgba(112,56,248,0.4);  color: #aa88ff; }
+.type-ice      { background: rgba(152,216,216,0.4); color: #88ddff; }
+.type-fighting { background: rgba(192,48,40,0.4);   color: #ff8888; }
+.type-fairy    { background: rgba(238,153,172,0.4); color: #ffaacc; }
+.type-ground   { background: rgba(224,192,104,0.4); color: #ddbb66; }
+.type-rock     { background: rgba(184,160,56,0.4);  color: #ccaa44; }
+.type-bug      { background: rgba(168,184,32,0.4);  color: #aacc44; }
+.type-flying   { background: rgba(168,144,240,0.4); color: #aaaaff; }
+.type-steel    { background: rgba(184,184,208,0.4); color: #ccccdd; }
+
+/* ── Pokéball (card back) ── */
+.pokeball-icon {
+  width: 70px;
+  height: 70px;
+  position: relative;
+}
+
+.pokeball-top {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 50%;
+  background: #fff;
+  border-radius: 100px 100px 0 0;
+  border: 3px solid rgba(0,0,0,0.2);
+}
+
+.pokeball-middle {
+  position: absolute;
+  top: calc(50% - 4px);
+  left: 0; right: 0;
+  height: 8px;
+  background: rgba(0,0,0,0.25);
+  z-index: 1;
+}
+
+.pokeball-bottom {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 50%;
+  background: rgba(255,255,255,0.3);
+  border-radius: 0 0 100px 100px;
+  border: 3px solid rgba(0,0,0,0.2);
+}
+
+.pokeball-button {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px; height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  border: 3px solid rgba(0,0,0,0.2);
+  z-index: 2;
+  box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
+
+/* ── Loading ── */
+.loading {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 5rem 1rem;
+}
+
+.loading-pokeball {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1.5rem;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loading-text {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 1px;
+}
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal {
+  background: linear-gradient(145deg, #1e1b4b, #312e81);
+  border-radius: 24px;
+  padding: 2.5rem 3rem;
+  text-align: center;
+  max-width: 360px;
+  width: 90%;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+  animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.7); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.modal-win  { border-color: rgba(255,215,0,0.4); }
+.modal-lose { border-color: rgba(238,66,66,0.4); }
+
+.modal-emoji { font-size: 3.5rem; margin-bottom: 1rem; }
+
+.modal-title {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1rem;
+  color: #FFD700;
+  text-shadow: 0 0 20px rgba(255,215,0,0.5);
+  line-height: 1.4;
+  margin-bottom: 0.75rem;
+}
+
+.modal-sub {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.btn-restart {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #1e1b4b;
+  border: none;
+  border-radius: 100px;
+  padding: 0.8rem 2.5rem;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255,165,0,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-restart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255,165,0,0.6);
+}
+
+.btn-restart:active {
+  transform: translateY(0);
+}
